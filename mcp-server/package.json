@@ -1,0 +1,23 @@
+{
+  "name": "webflow-de-mcp-server",
+  "version": "0.1.0",
+  "private": true,
+  "bin": "./dist/index.js",
+  "scripts": {
+    "start": "mcp-scripts start",
+    "build": "mcp-scripts build",
+    "setup": "mcp-scripts setup"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.8.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.13",
+    "@types/ws": "^8.18.1",
+    "mcp-scripts": "0.1.3",
+    "typescript": "^5.8.2"
+  }
+}

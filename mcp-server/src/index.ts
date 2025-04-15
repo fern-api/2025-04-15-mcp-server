@@ -30,7 +30,8 @@ async function handleSocketCommand(commandName: CommandName, params: unknown) {
     case "insert_element_before":
     case "insert_element_after":
     case "prepend_element":
-    case "append_element": {
+    case "append_element":
+    case "set_style_background_color": {
       result = await sendCommandToSocket(commandName, params);
       break;
     }

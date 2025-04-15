@@ -7,6 +7,7 @@ interface Payload {
   target_id?: string;
   text?: string;
   new_element_type?: keyof ElementPresets;
+  background_color?: string;
 }
 
 const commands: Command[] = [
@@ -42,6 +43,10 @@ const commands: Command[] = [
     button_id: "append_element",
     command_name: "append_element",
   },
+  {
+    button_id: "set_style_background_color",
+    command_name: "set_style_background_color",
+  },
 ];
 
 function addButtonListeners() {
@@ -71,6 +76,10 @@ function addButtonListeners() {
       append_element: {
         target_id: target_id,
         new_element_type: "Button",
+      },
+      set_style_background_color: {
+        target_id: target_id,
+        background_color: "red",
       },
     };
   }
@@ -120,6 +129,12 @@ function validatePayload(command_name: string, payload: Payload) {
       }
       break;
     }
+    case "set_style_background_color": {
+      if (!payload.target_id || !payload.background_color) {
+        throw new Error("target_id and background_color are required");
+      }
+      break;
+    }
     default: {
       throw new Error(`command_name is not valid: ${command_name}`);
     }
@@ -164,6 +179,10 @@ async function handleCommand(
       const element = await _getElementById(payload.target_id);
       const new_element = webflow.elementPresets[payload.new_element_type];
       return appendElement(element, new_element);
+    }
+    case "set_style_background_color": {
+      const element = await _getElementById(payload.target_id);
+      return setStyleBackgroundColor(element, payload.background_color);
     }
     default: {
       throw new Error(`command_name is not valid: ${command_name}`);
@@ -263,6 +282,25 @@ async function appendElement(
   } else {
     throw new Error(
       `target_id does not support appendElement: ${element.id.element}`
+    );
+  }
+}
+
+async function setStyleBackgroundColor(
+  element: AnyElement,
+  background_color: string
+) {
+  console.log("setStyleBackgroundColor", { element, background_color });
+  const newStyle = await webflow.createStyle(
+    `[name] background-color: ${background_color}`
+  );
+  (await newStyle).setProperties({ "background-color": background_color });
+  if (element?.styles) {
+    // Apply style to selected element
+    return await element.setStyles([newStyle]);
+  } else {
+    throw new Error(
+      `target_id does not support setStyleBackgroundColor: ${element.id.element}`
     );
   }
 }

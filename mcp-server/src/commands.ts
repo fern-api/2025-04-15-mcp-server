@@ -66,6 +66,15 @@ export const commands = [
       new_element_type: z.enum(["Button", "Paragraph"]),
     },
   },
+  {
+    commandName: "set_style_background_color" as const,
+    description: "Set the background color (CSS color) for target_id",
+    apiType: "socket" as const,
+    paramsSchema: {
+      target_id: z.string(),
+      background_color: z.string(),
+    },
+  },
 ];
 
 export type CommandName = (typeof commands)[number]["commandName"];
